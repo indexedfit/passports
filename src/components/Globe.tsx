@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import GlobeGL from 'react-globe.gl';
 import { scaleLinear } from 'd3-scale';
+import { feature } from 'topojson-client';
 import { useAppStore } from '../stores/appStore';
 import { countriesByIso2, countriesByIso3 } from '../lib/data';
 import type { Country } from '../lib/types';
+import type { Topology } from 'topojson-specification';
 
 // GeoJSON feature type
 interface GeoFeature {
@@ -154,11 +156,10 @@ export function Globe() {
     // Use Natural Earth 110m - much simpler geometry, way fewer points per country
     fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
       .then((res) => res.json())
-      .then(async (topology) => {
+      .then((topology: Topology) => {
         if (!mounted) return;
         // Convert TopoJSON to GeoJSON
-        const topojson = await import('topojson-client');
-        const geojson = topojson.feature(topology, topology.objects.countries) as unknown as GeoJSON;
+        const geojson = feature(topology, topology.objects.countries) as unknown as GeoJSON;
 
         setCountries(geojson);
         // Small delay to let globe stabilize
@@ -398,7 +399,6 @@ export function Globe() {
         onPolygonHover={(polygon: object | null) => handlePolygonHover(polygon as GeoFeature | null)}
         onPolygonClick={(polygon: object) => handlePolygonClick(polygon as GeoFeature)}
         polygonsTransitionDuration={400}
-        animateIn={true}
       />
     </div>
   );

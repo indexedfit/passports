@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../stores/appStore';
 import { CountUpNumber } from './CountUpNumber';
@@ -26,14 +27,16 @@ interface SelectedPassportProps {
   isPrimary: boolean;
 }
 
-function SelectedPassport({ country, onRemove, isPrimary }: SelectedPassportProps) {
-  const visaCount = country.visaFreeAccess.length;
-  const dualStatus = country.dualCitizenship.allowed === true
-    ? ('conditional' in country.dualCitizenship && country.dualCitizenship.conditional ? 'Conditional' : 'Yes')
-    : country.dualCitizenship.allowed === false ? 'No' : 'Unknown';
+const SelectedPassport = forwardRef<HTMLDivElement, SelectedPassportProps>(
+  function SelectedPassport({ country, onRemove, isPrimary }, ref) {
+    const visaCount = country.visaFreeAccess.length;
+    const dualStatus = country.dualCitizenship.allowed === true
+      ? ('conditional' in country.dualCitizenship && country.dualCitizenship.conditional ? 'Conditional' : 'Yes')
+      : country.dualCitizenship.allowed === false ? 'No' : 'Unknown';
 
-  return (
-    <motion.div
+    return (
+      <motion.div
+        ref={ref}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
@@ -105,8 +108,9 @@ function SelectedPassport({ country, onRemove, isPrimary }: SelectedPassportProp
         </div>
       )}
     </motion.div>
-  );
-}
+    );
+  }
+);
 
 interface SynergyItemProps {
   country: CountryWithSynergy;
@@ -114,13 +118,15 @@ interface SynergyItemProps {
   onSelect: () => void;
 }
 
-function SynergyItem({ country, index, onSelect }: SynergyItemProps) {
-  const score = country.synergy.score;
-  const color = getSynergyColor(score);
-  const breakdown = country.synergy.breakdown;
+const SynergyItem = forwardRef<HTMLButtonElement, SynergyItemProps>(
+  function SynergyItem({ country, index, onSelect }, ref) {
+    const score = country.synergy.score;
+    const color = getSynergyColor(score);
+    const breakdown = country.synergy.breakdown;
 
-  return (
-    <motion.button
+    return (
+      <motion.button
+        ref={ref}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
@@ -155,8 +161,9 @@ function SynergyItem({ country, index, onSelect }: SynergyItemProps) {
         <div className="text-xs text-slate-400">synergy</div>
       </div>
     </motion.button>
-  );
-}
+    );
+  }
+);
 
 export function SynergyPanel() {
   const {
