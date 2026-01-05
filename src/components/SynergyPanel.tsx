@@ -189,7 +189,7 @@ export function SynergyPanel() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
-      className="fixed inset-x-2 bottom-2 top-auto max-h-[70vh] md:inset-auto md:right-4 md:top-4 md:bottom-4 md:max-h-none md:w-96 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col z-20"
+      className="fixed inset-x-2 bottom-2 top-auto max-h-[50vh] md:inset-auto md:right-4 md:top-4 md:bottom-4 md:max-h-none md:w-96 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col z-20"
     >
       {/* Header */}
       <div className="p-4 border-b border-slate-100">
