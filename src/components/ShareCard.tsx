@@ -48,12 +48,12 @@ export function ShareCard() {
 
   return (
     <>
-      {/* Share button - positioned to avoid SynergyPanel (w-96 = 384px + right-4 = 16px) */}
+      {/* Share button - top right on mobile (panel is bottom sheet), left of panel on desktop */}
       <motion.button
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={() => setShowModal(true)}
-        className="fixed bottom-6 right-[420px] z-30 flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
+        className="fixed top-4 right-4 md:top-auto md:bottom-6 md:right-[420px] z-30 flex items-center gap-2 px-3 py-2 md:px-4 md:py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path

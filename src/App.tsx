@@ -165,7 +165,7 @@ function App() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-slate-200"
+            className="hidden md:block absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-slate-200"
           >
             <div className="text-sm font-medium text-slate-700 mb-3">Synergy Score</div>
             <div className="flex flex-col gap-2">
@@ -194,7 +194,7 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ delay: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+            className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
           >
             <div className="flex items-center gap-8 text-slate-500 text-sm">
               <div className="flex items-center gap-2">
