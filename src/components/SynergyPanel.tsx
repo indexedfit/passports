@@ -37,32 +37,73 @@ function SelectedPassport({ country, onRemove, isPrimary }: SelectedPassportProp
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg"
+      className="px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg"
     >
-      <span className="text-xl">{getFlagEmoji(country.iso2)}</span>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-slate-800">{country.name}</span>
-          {isPrimary && (
-            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-              Primary
-            </span>
-          )}
+      <div className="flex items-center gap-2">
+        <span className="text-xl">{getFlagEmoji(country.iso2)}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium text-slate-800">{country.name}</span>
+            {isPrimary && (
+              <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                Primary
+              </span>
+            )}
+            {country.dataQuality === 'overridden' && (
+              <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
+                Updated
+              </span>
+            )}
+            {country.dataQuality === 'uncertain' && (
+              <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
+                Uncertain
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-slate-500 flex gap-2 flex-wrap">
+            <span>{country.regionName}</span>
+            <span>•</span>
+            <span>Dual: {dualStatus}</span>
+            {visaCount > 0 && <><span>•</span><span>{visaCount} visa-free</span></>}
+          </div>
         </div>
-        <div className="text-xs text-slate-500 flex gap-2">
-          <span>Dual: {dualStatus}</span>
-          {visaCount > 0 && <span>• {visaCount} visa-free</span>}
-        </div>
+        <button
+          onClick={onRemove}
+          className="text-slate-400 hover:text-slate-600 transition-colors"
+          aria-label={`Remove ${country.name}`}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-      <button
-        onClick={onRemove}
-        className="text-slate-400 hover:text-slate-600 transition-colors"
-        aria-label={`Remove ${country.name}`}
-      >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      {/* Show comment if available */}
+      {country.comment && (
+        <div className="mt-2 text-xs text-slate-600 bg-white/50 px-2 py-1 rounded border-l-2 border-blue-300">
+          {country.comment}
+        </div>
+      )}
+      {/* Show legal documents if available */}
+      {country.legalDocuments.length > 0 && country.legalDocuments[0].url && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {country.legalDocuments.slice(0, 2).map((doc, i) => (
+            doc.url ? (
+              <a
+                key={i}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                {doc.title.length > 30 ? doc.title.slice(0, 30) + '...' : doc.title}
+              </a>
+            ) : null
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -88,9 +129,14 @@ function SynergyItem({ country, index, onSelect }: SynergyItemProps) {
     >
       <span className="text-2xl">{getFlagEmoji(country.iso2)}</span>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-slate-800 truncate">{country.name}</div>
+        <div className="flex items-center gap-2">
+          <span className="font-medium text-slate-800 truncate">{country.name}</span>
+          {country.dataQuality === 'overridden' && (
+            <span className="text-xs text-emerald-600">✓</span>
+          )}
+        </div>
         <div className="text-sm text-slate-500">
-          {'conditional' in country.dualCitizenship && country.dualCitizenship.conditional ? 'Conditional' : 'Full'} dual citizenship
+          {country.regionName} • {'conditional' in country.dualCitizenship && country.dualCitizenship.conditional ? 'Conditional' : 'Full'} dual
         </div>
         {/* Score breakdown on hover */}
         <div className="hidden group-hover:flex gap-2 mt-1 text-xs text-slate-400">
@@ -279,6 +325,13 @@ export function SynergyPanel() {
           </div>
         </div>
       )}
+
+      {/* Data source footer */}
+      <div className="p-3 border-t border-slate-100 bg-slate-50/50">
+        <div className="text-xs text-slate-400 text-center">
+          Dual citizenship data from {selectedPassports[0]?.dataYear || 2020} • Visa data limited to major passports
+        </div>
+      </div>
     </motion.div>
   );
 }

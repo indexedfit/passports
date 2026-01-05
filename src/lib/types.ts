@@ -26,6 +26,16 @@ export type DualCitizenshipStatus =
   | { allowed: false }
   | { allowed: null; uncertain: true };
 
+// World region names
+export const REGION_NAMES: Record<number, string> = {
+  1: 'Africa',
+  2: 'Asia',
+  3: 'Europe',
+  4: 'North America',
+  5: 'Oceania',
+  6: 'South America',
+};
+
 // Cleaned country data
 export interface Country {
   iso3: string;
@@ -33,8 +43,10 @@ export interface Country {
   name: string;
   countryCode: number;
   worldRegion: number;
+  regionName: string;
   dualCitizenship: DualCitizenshipStatus;
   dataQuality: 'verified' | 'overridden' | 'uncertain';
+  dataYear: number;
   comment: string | null;
   legalDocuments: {
     title: string;

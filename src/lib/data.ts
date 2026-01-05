@@ -1,5 +1,6 @@
 import { dataJson } from './rawData';
 import type { RawCountryData, Country, DualCitizenshipStatus } from './types';
+import { REGION_NAMES } from './types';
 
 // Parse the raw "Allows_dual" field into normalized status
 function parseDualCitizenshipStatus(
@@ -73,8 +74,10 @@ function normalizeCountry(raw: RawCountryData): Country {
     name: raw.country,
     countryCode: raw.country_code,
     worldRegion: raw.world_region,
+    regionName: REGION_NAMES[raw.world_region] || 'Unknown',
     dualCitizenship: parseDualCitizenshipStatus(raw.Allows_dual, raw.Column1),
     dataQuality: parseDataQuality(raw.Status),
+    dataYear: raw.Year || 2020,
     comment: raw.Comment,
     legalDocuments: parseLegalDocuments(raw.urls, raw.documents),
     visaFreeAccess: raw.visaFreeAccess || [],
